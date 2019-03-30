@@ -79,11 +79,17 @@ public class SegreteriaStudentiController {
 @FXML
 void DoVerifica(ActionEvent event) {
 	
+	TxtResult.clear();
+	
 	try {
 		
+		if(ComboBox.getValue() != null || ComboBox.getValue() != "") {
 		if(modello.cercaCorsiStudente(Integer.parseInt(TxtMatricola.getText())).contains(modello.getCorso(ComboBox.getValue())))
 			TxtResult.appendText("Studente iscritto al corso \n");
 		else TxtResult.appendText("Studente non iscritto al corso \n");
+		} else {
+			TxtResult.appendText("Selezionare un corso");
+		}
 		
 	} catch(Exception e) {
 		
