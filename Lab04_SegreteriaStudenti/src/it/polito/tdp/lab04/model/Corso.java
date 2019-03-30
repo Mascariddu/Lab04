@@ -39,9 +39,12 @@ public class Corso {
 		this.pd = pd;
 	}
 	
+	public Corso() {
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public String toString() {
-		return "Corso [id=" + id + ", nome=" + nome + ", crediti=" + crediti + ", pd=" + pd + "]";
+		return "Corso: " + id + ", " + nome + ", " + crediti + ", " + pd;
 	}
 	
 	@Override

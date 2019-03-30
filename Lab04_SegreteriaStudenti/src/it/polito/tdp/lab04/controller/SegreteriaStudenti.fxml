@@ -81,7 +81,12 @@
                   </Button>
                   <Button fx:id="BtnIscriviti" mnemonicParsing="false" onAction="#DoIscrizione" prefHeight="25.0" prefWidth="54.0" text="Iscriviti">
                      <HBox.margin>
-                        <Insets left="480.0" />
+                        <Insets left="180.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="BtnIscrizione" mnemonicParsing="false" onAction="#DoVerifica" text="Cerca se iscritto">
+                     <HBox.margin>
+                        <Insets left="200.0" />
                      </HBox.margin>
                   </Button>
                </children>

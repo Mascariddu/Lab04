@@ -64,5 +64,10 @@ public class Studente {
 		if (matricola != other.matricola)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Studente: " + matricola + ", " + nome + ", " + cognome + ", " + CDS ;
 	}	
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import it.polito.tdp.lab04.model.Studente;
 
 public class CorsoDAO {
 
+	
+	StudenteDAO stud = new StudenteDAO();
 	/*
 	 * Ottengo tutti i corsi salvati nel Db
 	 */
@@ -41,7 +44,6 @@ public class CorsoDAO {
 				corsi.add(new Corso(codins,numeroCrediti,nome,periodoDidattico));
 			}
 			
-			conn.close();
 			return corsi;
 		} catch (SQLException e) {
 			// e.printStackTrace();
@@ -52,15 +54,81 @@ public class CorsoDAO {
 	/*
 	 * Dato un codice insegnamento, ottengo il corso
 	 */
-	public void getCorso(Corso corso) {
+	public Corso getCorsoByCod(String codCorso) {
 		// TODO
+		final String sql= "SELECT * FROM corso WHERE codins = ?";
+		Corso c=new Corso();
+		
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st= conn.prepareStatement(sql);
+			st.setString(1, codCorso);
+			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				c = new Corso(rs.getString("codins"),rs.getInt("crediti"),rs.getString("nome"),rs.getInt("pd"));
+			}
+			
+			System.out.println(c.toString());
+			return c;
+			
+		} catch(SQLException e) {
+			throw new RuntimeException("Errore Db");
+		}
+	}
+	
+	public Corso getCorso(String corso) {
+		// TODO
+		final String sql= "SELECT * FROM corso WHERE nome = ?";
+		Corso c=new Corso();
+		
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st= conn.prepareStatement(sql);
+			st.setString(1, corso);
+			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				c = new Corso(rs.getString("codins"),rs.getInt("crediti"),rs.getString("nome"),rs.getInt("pd"));
+			}
+			
+			System.out.println(c.toString());
+			return c;
+			
+		} catch(SQLException e) {
+			throw new RuntimeException("Errore Db");
+		}
 	}
 
 	/*
 	 * Ottengo tutti gli studenti iscritti al Corso
 	 */
-	public void getStudentiIscrittiAlCorso(Corso corso) {
+	public List<String> getStudentiIscrittiAlCorso(Corso corso) {
 		// TODO
+		final String sql= "SELECT matricola FROM iscrizione WHERE codins= ? ";
+		List<String> studenti = new LinkedList<String>();
+		
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, corso.getId());
+			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				studenti.add(stud.getStudenteByMatricola(rs.getInt("matricola")).toString());
+				
+			}
+			
+			
+			return studenti;
+			
+		} catch(Exception e) {
+			throw new RuntimeException("Errore Db");
+		}
 	}
 
 	/*
