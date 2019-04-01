@@ -3,6 +3,7 @@ package it.polito.tdp.lab04.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.lab04.DAO.CorsoDAO;
 import it.polito.tdp.lab04.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,7 +57,7 @@ public class SegreteriaStudentiController {
 
 
 
-@FXML
+    @FXML
     void DoCercaCorsi(ActionEvent event) {
     	
     	TxtResult.clear();
@@ -76,20 +77,25 @@ public class SegreteriaStudentiController {
 
     }
 
-@FXML
-void DoVerifica(ActionEvent event) {
+    @FXML
+    void DoVerifica(ActionEvent event) {
 	
 	TxtResult.clear();
 	
 	try {
 		
-		if(ComboBox.getValue() != null || ComboBox.getValue() != "") {
-		if(modello.cercaCorsiStudente(Integer.parseInt(TxtMatricola.getText())).contains(modello.getCorso(ComboBox.getValue())))
-			TxtResult.appendText("Studente iscritto al corso \n");
-		else TxtResult.appendText("Studente non iscritto al corso \n");
+		if(ComboBox.getValue() != null && ComboBox.getValue() != "") {
+			
+		if(modello.getNomeCercato(Integer.parseInt(TxtMatricola.getText())) != null) {
+			
+		if(modello.verificaIscrizione(modello.cercaStudente(Integer.parseInt(TxtMatricola.getText())), modello.getCorsoByNome(ComboBox.getValue())))
+			TxtResult.appendText("Studente iscritto al corso! \n");
+		else TxtResult.appendText("Studente non iscritto al corso! \n");
 		} else {
-			TxtResult.appendText("Selezionare un corso");
+			TxtResult.appendText("Selezionare un corso!");
 		}
+		
+		} else TxtResult.appendText("Studente inesistente!");
 		
 	} catch(Exception e) {
 		
@@ -97,44 +103,66 @@ void DoVerifica(ActionEvent event) {
 		
 	}
 	
-}
+    }
 
-@FXML
-void DoCercaIscritti(ActionEvent event) {
+    @FXML
+    void DoCercaIscritti(ActionEvent event) {
 
 	TxtResult.clear();
 	
 	if(ComboBox.getValue()!= "") {
 		if(modello.cercaIscrittiCorso(ComboBox.getValue()) != "")
 			TxtResult.appendText(modello.cercaIscrittiCorso(ComboBox.getValue()));
-		else TxtResult.appendText("Nessuno studente");
+		else TxtResult.appendText("Nessuno studente!");
 	}
-	else TxtResult.appendText("Nessun corso selezionato");
+	else TxtResult.appendText("Nessun corso selezionato!");
 	
 	if(ComboBox.getValue() == null) {
-		TxtResult.appendText("Nessun corso selezionato");
+		TxtResult.appendText("Nessun corso selezionato!");
 	}
 	
 	
-}
+    }
 
-@FXML
-void DoIscrizione(ActionEvent event) {
+    @FXML
+    void DoIscrizione(ActionEvent event) {
 
-}
+    	TxtResult.clear();
+    	
+    	try {
+    	
+    	if(ComboBox.getValue() != null && ComboBox.getValue() != "") {
+    		
+    		if(modello.getNomeCercato(Integer.parseInt(TxtMatricola.getText())) != null) {
+    			
+    			if(!modello.verificaIscrizione(modello.cercaStudente(Integer.parseInt(TxtMatricola.getText())), modello.getCorsoByNome(ComboBox.getValue()))) {
+    				
+    				TxtResult.appendText(modello.IscriviStudente(Integer.parseInt(TxtMatricola.getText()), ComboBox.getValue()));
+    				
+    			} else TxtResult.appendText("Studente già iscritto al corso!");
+    			
+    		}else TxtResult.appendText("Studente inesistente!");
+    		
+    	} else TxtResult.appendText("Selezionare un corso!");
+    	
+    	}catch(NumberFormatException e) {
+    		TxtResult.appendText("Inserire valori validi per la matricola!");
+    	}
+    	
+    }
 
-@FXML
-void DoReset(ActionEvent event) {
+    @FXML
+    void DoReset(ActionEvent event) {
 	
 	TxtResult.clear();
 	TxtMatricola.clear();
 	TxtNome.clear();
 	TxtCognome.clear();
 
-}
+    }
 
-@FXML
-void DoFatto(ActionEvent event) {
+    @FXML
+    void DoFatto(ActionEvent event) {
 	
 	TxtResult.clear();
 	
@@ -149,12 +177,13 @@ void DoFatto(ActionEvent event) {
 	if(modello.getNomeCercato(Integer.parseInt(TxtMatricola.getText())) == null)
 		TxtResult.appendText("Studente inesistente");
 		
-}
+    }
 
-public void setModel(Model m) {
+    public void setModel(Model m) {
 	this.modello=m;
 	this.ComboBox.getItems().addAll(modello.getCorsi());
-}
+    }
+    
     @FXML
     void initialize() {
         assert ComboBox != null : "fx:id=\"ComboBox\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";

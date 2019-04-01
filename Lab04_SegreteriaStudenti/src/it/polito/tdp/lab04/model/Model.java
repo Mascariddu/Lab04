@@ -55,6 +55,17 @@ public class Model {
 			
 		return result.substring(0,result.length()-1);
 	}
+	
+	public String cercaCodCorsiStudente(int text) {
+		// TODO Auto-generated method stub
+		StudenteDAO dao = new StudenteDAO();
+		String result="";
+		
+		for(String s: dao.getCodCorsiStudenteByMatricola(text))
+			result+= s+"\n";
+			
+		return result.substring(0,result.length()-1);
+	}
 
 	public Studente cercaStudente(int text) {
 		// TODO Auto-generated method stub
@@ -68,6 +79,29 @@ public class Model {
 		CorsoDAO dao = new CorsoDAO();
 		
 		return dao.getCorso(value).getId();
+	}
+
+	public String IscriviStudente(int parseInt, String value) {
+		// TODO Auto-generated method stub
+
+		CorsoDAO dao = new CorsoDAO();
+		if(dao.inscriviStudenteACorso(this.cercaStudente(parseInt),this.getCorsoByNome(value)) == true)
+			return "Iscrizione avvenuta con successo!";
+		else return "Iscrizione non avvenuta!";
+		
+	}
+
+	public Corso getCorsoByNome(String value) {
+		// TODO Auto-generated method stub
+		CorsoDAO c = new CorsoDAO();
+		return c.getCorso(value);
+	}
+
+	public boolean verificaIscrizione(Studente cercaStudente, Corso corsoByNome) {
+		// TODO Auto-generated method stub
+		
+		CorsoDAO c = new CorsoDAO();
+		return c.verificaIscrizione(cercaStudente, corsoByNome);
 	}
 
 }

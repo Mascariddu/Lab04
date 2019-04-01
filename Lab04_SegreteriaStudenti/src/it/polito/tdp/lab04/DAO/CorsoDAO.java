@@ -70,7 +70,7 @@ public class CorsoDAO {
 				c = new Corso(rs.getString("codins"),rs.getInt("crediti"),rs.getString("nome"),rs.getInt("pd"));
 			}
 			
-			System.out.println(c.toString());
+
 			return c;
 			
 		} catch(SQLException e) {
@@ -94,7 +94,6 @@ public class CorsoDAO {
 				c = new Corso(rs.getString("codins"),rs.getInt("crediti"),rs.getString("nome"),rs.getInt("pd"));
 			}
 			
-			System.out.println(c.toString());
 			return c;
 			
 		} catch(SQLException e) {
@@ -130,6 +129,39 @@ public class CorsoDAO {
 			throw new RuntimeException("Errore Db");
 		}
 	}
+	
+	public boolean verificaIscrizione(Studente s, Corso c) {
+		
+		final String sql = "SELECT * FROM iscrizione WHERE codins=? AND matricola = ?";
+		int flag=0;
+		
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			
+			st.setString(1, c.getId());
+			st.setInt(2, s.getMatricola());
+			
+			ResultSet rs = st.executeQuery();
+			
+			//System.out.println(rs.getString("codins")+rs.getInt("matricola"));
+			System.out.println(flag);
+			
+			while (rs.next()){
+				
+				flag=1;
+				System.out.println(flag);
+			}
+			
+		if(flag==1)
+		return true;
+		else return false;
+			
+		} catch(Exception e) {
+			throw new RuntimeException("Errore Db");
+		}
+	}
 
 	/*
 	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
@@ -137,6 +169,27 @@ public class CorsoDAO {
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
 		// TODO
 		// ritorna true se l'iscrizione e' avvenuta con successo
-		return false;
+		
+		final String sql = "INSERT IGNORE INTO iscrizione (matricola, codins) VALUES (?,?)";
+		
+		try {
+			
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st= conn.prepareStatement(sql);
+			
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getId());
+			
+			st.executeUpdate();
+			
+			System.out.println("Iscrizione:"+this.verificaIscrizione(studente, corso));
+			return this.verificaIscrizione(studente, corso);
+			
+		}catch(Exception e) {
+			
+			throw new RuntimeException("Errore Db");
+		}
+	
 	}
 }
